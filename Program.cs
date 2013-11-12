@@ -16,15 +16,16 @@ namespace TempControlDuino
             // write your code here
             while (true)
             {
-                AnalogInput pot = new AnalogInput(AnalogChannels.ANALOG_PIN_A0);
+                var zero = new TempTrippedRelay(AnalogChannels.ANALOG_PIN_A0, Pins.GPIO_PIN_D0, 65);
 
-                int potValue = 0;
+                //int potValue = 0;
 
                 while (true)
                 {
                     //read the value of the potentiometer
-                    potValue = (int)pot.ReadRaw();
-                    Debug.Print("ReadRaw analog value: " + pot.ReadRaw());
+                    //potValue = (int)pot.ReadRaw();
+                    //Debug.Print("ReadRaw analog value: " + pot.ReadRaw());
+                    Debug.Print(zero.ReadTemp().ToString());
 
                     Thread.Sleep(1000); 
                     
