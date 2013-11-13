@@ -73,14 +73,16 @@ namespace TempControlDuino
 
             var R1 = ((R2 * Vin) / Vout) - R2;
 
-            /* Now map R1 to known temperature values
-             *  0°C == 26000
-             * 24°C == 9900
-             * 38°C == 5200
+            /* 
+             * Now map R1 to known temperature values
+             * 26000 == 0°C 
+             *  9900 == 24°C 
+             *  5200 == 38°C 
              * 
-             * And solve to a polynomial regression.
-             * Plot the above values in Excel in an XY Scatter Plot, add a Polynomial Trendline, and configure 
-             * the Trendline to show the equation on the chart. 
+             * And solve the regression to fing polynomial coefficients.
+             * Plot the above values in Excel in an XY Scatter Plot, add a Trendline (Polynomial; Order=2), configure 
+             * the Trendline to show the equation on the chart, and possibly configure the number format 
+             * of the equation (12 decimal places). 
              * 
              */
 
