@@ -16,7 +16,12 @@ namespace TempControlDuino
             // write your code here
             while (true)
             {
-                var zero = new TempTrippedRelay(AnalogChannels.ANALOG_PIN_A0, Pins.GPIO_PIN_D0, 65);
+                var sensors = new[] { new TempTrippedRelay(AnalogChannels.ANALOG_PIN_A0, Pins.GPIO_PIN_D0, 65),
+                     new TempTrippedRelay(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 65),
+                     new TempTrippedRelay(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 65),
+                     new TempTrippedRelay(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 65),
+                     new TempTrippedRelay(AnalogChannels.ANALOG_PIN_A4, Pins.GPIO_PIN_D4, 65),
+                     new TempTrippedRelay(AnalogChannels.ANALOG_PIN_A5, Pins.GPIO_PIN_D5, 65) };
 
                 //int potValue = 0;
 
@@ -25,11 +30,15 @@ namespace TempControlDuino
                     //read the value of the potentiometer
                     //potValue = (int)pot.ReadRaw();
                     //Debug.Print("ReadRaw analog value: " + pot.ReadRaw());
-                    Debug.Print(zero.ReadTemp().ToString());
+                    for (int i = 0; i < sensors.Length; i++)
+                    {
+                        Debug.Print(i.ToString() + " : " + sensors[i].ReadTemp().ToString("F2"));
+                    }
+                    Debug.Print("==========");
 
-                    Thread.Sleep(1000); 
-                    
-                } 
+                    Thread.Sleep(1000);
+
+                }
             }
 
         }
