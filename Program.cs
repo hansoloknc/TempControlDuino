@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define BLUE
+
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -19,12 +21,23 @@ namespace TempControlDuino
                 //0 and 5 are case fans
                 var caseFans = new[] { new Fan(Pins.GPIO_PIN_D0), new Fan(Pins.GPIO_PIN_D5) };
 
+#if BLUE
                 //1 through 4 are CPU fans
-                var sensors = new[] { new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 1000),
-                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 1000),
-                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 1000),
-                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A4, Pins.GPIO_PIN_D4, 1000),
+                var sensors = new[] { new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 3900),
+                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 7300),
+                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 3200),
+                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A4, Pins.GPIO_PIN_D4, 3400)
                      };
+#endif
+
+#if YELLOW
+                //1 through 4 are CPU fans
+                var sensors = new[] { new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 3900),
+                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 7300),
+                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 3200),
+                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A4, Pins.GPIO_PIN_D4, 3400)
+                     };
+#endif
 
                 //int potValue = 0;
 
@@ -36,7 +49,7 @@ namespace TempControlDuino
                     for (int i = 0; i < sensors.Length; i++)
                     {
                         var ohms = sensors[i].Evaluate();
-                        Debug.Print((i+1).ToString() + " : " + ohms.ToString("F2"));
+                        Debug.Print((i+1).ToString() + " : " + ohms.ToString("F2") + "\t : " + (sensors[i].FanState ? "ON" : "OFF"));
                     }
 
                     //See if all of the CPU fans are on.
@@ -46,6 +59,7 @@ namespace TempControlDuino
                     {
                         allFans &= sensors[i].FanState;
                     }
+                    Debug.Print("Case fans: " + (allFans ? "ON" : "OFF"));
                     foreach (var caseFan in caseFans)
                     {
                         caseFan.SetFan(allFans);
@@ -53,7 +67,7 @@ namespace TempControlDuino
 
                     Debug.Print("==========");
 
-                    Thread.Sleep(5000);
+                    Thread.Sleep(15000);
 
                 }
             }
