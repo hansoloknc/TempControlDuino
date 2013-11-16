@@ -15,64 +15,54 @@ namespace TempControlDuino
     {
         public static void Main()
         {
-            // write your code here
-            while (true)
-            {
-                //0 and 5 are case fans
-                var caseFans = new[] { new Fan(Pins.GPIO_PIN_D0), new Fan(Pins.GPIO_PIN_D5) };
+            //0 and 5 are case fans
+            var caseFans = new[] { new Fan(Pins.GPIO_PIN_D0), new Fan(Pins.GPIO_PIN_D5) };
 
+            //1 through 4 are CPU fans
 #if BLUE
-                //1 through 4 are CPU fans
-                var sensors = new[] { new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 3900),
-                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 7300),
-                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 3200),
-                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A4, Pins.GPIO_PIN_D4, 3400)
-                     };
+            var sensors = new[] { new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 3900),
+                    new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 7300),
+                    new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 3200),
+                    new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A4, Pins.GPIO_PIN_D4, 3400)
+                    };
 #endif
 
 #if YELLOW
-                //1 through 4 are CPU fans
-                var sensors = new[] { new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 4500),
+            var sensors = new[] { new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 4500),
                      new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 3300),
                      new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 4800),
                      new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A4, Pins.GPIO_PIN_D4, 3500)
                      };
 #endif
 
-                //int potValue = 0;
-
-                while (true)
+            while (true)
+            {
+                //Evaluate all of the sensors and set the fans as appropriate.
+                for (int i = 0; i < sensors.Length; i++)
                 {
-                    //read the value of the potentiometer
-                    //potValue = (int)pot.ReadRaw();
-                    //Debug.Print("ReadRaw analog value: " + pot.ReadRaw());
-                    for (int i = 0; i < sensors.Length; i++)
-                    {
-                        var ohms = sensors[i].Evaluate();
-                        Debug.Print((i+1).ToString() + " : " + ohms.ToString("F2") + "\t : " + (sensors[i].FanState ? "ON" : "OFF"));
-                    }
-
-                    //See if all of the CPU fans are on.
-                    //If they are, turn on the case fans.
-                    var allFans = true;
-                    for (int i = 0; i < sensors.Length; i++)
-                    {
-                        allFans &= sensors[i].FanState;
-                    }
-                    Debug.Print("Case fans: " + (allFans ? "ON" : "OFF"));
-                    foreach (var caseFan in caseFans)
-                    {
-                        caseFan.SetFan(allFans);
-                    }
-
-                    Debug.Print("==========");
-
-                    Thread.Sleep(15000);
-
+                    var ohms = sensors[i].Evaluate();
+                    Debug.Print((i + 1).ToString() + " : " + ohms.ToString("F2") + "\t : " + (sensors[i].FanState ? "ON" : "OFF"));
                 }
-            }
 
+                //If *all* of the CPU fans are on, turn on the case fans.
+                var allFans = true;
+                for (int i = 0; i < sensors.Length; i++)
+                {
+                    allFans &= sensors[i].FanState;
+                }
+                Debug.Print("Case fans: " + (allFans ? "ON" : "OFF"));
+                foreach (var caseFan in caseFans)
+                {
+                    caseFan.SetFan(allFans);
+                }
+
+                Debug.Print("==========");
+
+                Thread.Sleep(15000);
+
+            }
         }
+
 
     }
 }
