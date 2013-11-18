@@ -13,8 +13,16 @@ namespace TempControlDuino
 {
     public class Program
     {
+        /// <summary>
+        /// The minimum number of iterations that case fans should run for
+        /// </summary>
+        const long CaseFanIterationThreshold = 3;
+
         public static void Main()
         {
+            long iteration = 0;
+
+
             //0 and 5 are case fans
             var caseFans = new[] { new Fan(Pins.GPIO_PIN_D0), new Fan(Pins.GPIO_PIN_D5) };
 
@@ -35,6 +43,7 @@ namespace TempControlDuino
                      };
 #endif
 
+            var lastCaseFanStart = iteration;
             while (true)
             {
                 //Evaluate all of the sensors and set the fans as appropriate.
@@ -50,6 +59,14 @@ namespace TempControlDuino
                 {
                     allFans &= sensors[i].FanState;
                 }
+                
+                //If the case fans are to be triggered this iteration, mark the starting point.
+                if (allFans == true)
+                    lastCaseFanStart = iteration;
+
+                //Ensure they stay on for at least Threshold extra iterations
+                allFans = ((iteration > CaseFanIterationThreshold || allFans) && ((iteration - lastCaseFanStart) < CaseFanIterationThreshold));
+
                 Debug.Print("Case fans: " + (allFans ? "ON" : "OFF"));
                 foreach (var caseFan in caseFans)
                 {
@@ -59,7 +76,7 @@ namespace TempControlDuino
                 Debug.Print("==========");
 
                 Thread.Sleep(15000);
-
+                iteration++;
             }
         }
 
