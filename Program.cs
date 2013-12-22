@@ -37,8 +37,8 @@ namespace TempControlDuino
 
 #if YELLOW
             var sensors = new[] { new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 4500),
-                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 2000),
-                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 4800),
+                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 2100),
+                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 3200),
                      new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A4, Pins.GPIO_PIN_D4, 3500)
                      };
 #endif
@@ -46,6 +46,7 @@ namespace TempControlDuino
             var lastCaseFanStart = iteration;
             while (true)
             {
+                Debug.Print("========== " + iteration.ToString());
                 //Evaluate all of the sensors and set the fans as appropriate.
                 for (int i = 0; i < sensors.Length; i++)
                 {
@@ -72,8 +73,6 @@ namespace TempControlDuino
                 {
                     caseFan.SetFan(allFans);
                 }
-
-                Debug.Print("==========");
 
                 Thread.Sleep(15000);
                 iteration++;
