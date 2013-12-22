@@ -1,4 +1,4 @@
-﻿#define YELLOW
+﻿#define BLUE
 
 using System;
 using System.Net;
@@ -29,9 +29,9 @@ namespace TempControlDuino
             //1 through 4 are CPU fans
 #if BLUE
             var sensors = new[] { new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A1, Pins.GPIO_PIN_D1, 3900),
-                    new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 7300),
+                    new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A2, Pins.GPIO_PIN_D2, 6400),
                     new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A3, Pins.GPIO_PIN_D3, 3000),
-                    new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A4, Pins.GPIO_PIN_D4, 3200)
+                    new OhmTrippedFan(AnalogChannels.ANALOG_PIN_A5, Pins.GPIO_PIN_D4, 5600)
                     };
 #endif
 
